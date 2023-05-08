@@ -54,7 +54,7 @@ KMP算法就是在这个避免掉重复的思路下产生的，我们想让每�
 
 求解next数组的过程其实是动态规划的思维。
 
-next数组就是将每个pattern[0]到pattern[i]子串的最长相等前后缀的长度-1给存了起来，方便每次我们遇到不匹配的字符时可以从next直接找到j应该回退的位置，也就是next[j - 1]。
+next数组就是将每个pattern[0]到pattern[i]子串的最长相等前后缀的长度-1(也就是下标)给存了起来，方便每次我们遇到不匹配的字符时可以从next直接找到j应该回退的位置，也就是next[j - 1]。
 
 先看一下求next数组的动画吧。
 ![](./images/next.gif)
@@ -85,7 +85,7 @@ def getNext(pattern: str) -> list:
     i = 1   # 第一个字符没有相同前后缀，直接跳过
     # while i < len(pattern):
     #     if pattern[j] == pattern[i]:
-    #         next[i] = next[i - 1] + 1
+    #         next[i] = j + 1     # 此时j为之前已经匹配的前后缀长度-1，然后加上新的字符所以+1(next中存的是下标，j也是下标)
     #         j += 1      # 相等前后缀长度+1
     #         i += 1      # 判断下一个字符
     #     else:
@@ -98,11 +98,10 @@ def getNext(pattern: str) -> list:
     #     以上代码可化简为
     while i < len(pattern):
         if pattern[j] == pattern[i]:
-            next_[i] = next_[i - 1] + 1
             j += 1
+            next_[i] = j
             i += 1
         elif j == 0:
-            next_[i] = 0
             i += 1
         else:
             j = next_[j - 1]
